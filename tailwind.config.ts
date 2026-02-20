@@ -57,6 +57,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        xero: {
+          navy: "hsl(var(--xero-navy))",
+          "navy-foreground": "hsl(var(--xero-navy-foreground))",
+          blue: "hsl(var(--xero-blue))",
+          warning: "hsl(var(--xero-warning))",
+          "warning-foreground": "hsl(var(--xero-warning-foreground))",
+          success: "hsl(var(--xero-success))",
+          "success-foreground": "hsl(var(--xero-success-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
