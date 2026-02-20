@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BrainCircuit, Sparkles, ShieldAlert } from "lucide-react";
+import { Sparkles, Search, Filter, Columns3 } from "lucide-react";
 import XeroHeader from "@/components/XeroHeader";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableHeader, TableHead, TableRow, TableCell, TableBody } from "@/components/ui/table";
-import { mockBills, getBillsByStatus, getFlaggedBills, type BillStatus } from "@/data/bills";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { mockBills, getBillsByStatus, type BillStatus } from "@/data/bills";
 
 const statusTabs: { value: BillStatus | "all"; label: string }[] = [
   { value: "all", label: "All" },
@@ -36,81 +39,57 @@ const Index = () => {
   const navigate = useNavigate();
 
   const bills = tab === "all" ? mockBills : getBillsByStatus(tab as BillStatus);
-  const flagged = getFlaggedBills();
-  const totalAmount = mockBills.reduce((s, b) => s + b.total, 0);
+  const totalAmount = bills.reduce((s, b) => s + b.total, 0);
 
   return (
     <div className="min-h-screen bg-secondary">
       <XeroHeader />
       <main className="max-w-7xl mx-auto px-6 py-6">
-        {/* Summary cards */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-card rounded-lg border p-5">
-            <p className="text-sm text-muted-foreground">Total Bills</p>
-            <p className="text-2xl font-semibold mt-1">{mockBills.length}</p>
+        {/* Search & Filter Bar */}
+        <div className="bg-card rounded-lg border p-4 mb-4">
+          <div className="flex items-end gap-3 flex-wrap">
+            <div className="flex-1 min-w-[200px]">
+              <label className="text-xs text-muted-foreground mb-1 block">Search</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Enter a contact, amount, or reference"
+                  className="pl-9 h-9 text-sm"
+                />
+              </div>
+            </div>
+            <div className="w-[140px]">
+              <label className="text-xs text-muted-foreground mb-1 block">Start date</label>
+              <Input type="date" className="h-9 text-sm" />
+            </div>
+            <div className="w-[140px]">
+              <label className="text-xs text-muted-foreground mb-1 block">End date</label>
+              <Input type="date" className="h-9 text-sm" />
+            </div>
+            <div className="w-[150px]">
+              <label className="text-xs text-muted-foreground mb-1 block">Date type</label>
+              <Select defaultValue="any">
+                <SelectTrigger className="h-9 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any date</SelectItem>
+                  <SelectItem value="due">Due date</SelectItem>
+                  <SelectItem value="planned">Planned date</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button variant="outline" size="sm" className="h-9 gap-1.5">
+              <Filter className="h-3.5 w-3.5" /> Filter
+            </Button>
+            <Button variant="outline" size="sm" className="h-9 gap-1.5">
+              <Columns3 className="h-3.5 w-3.5" /> Columns
+            </Button>
           </div>
-          <div className="bg-card rounded-lg border p-5">
-            <p className="text-sm text-muted-foreground">Total Amount</p>
-            <p className="text-2xl font-semibold mt-1">{formatCurrency(totalAmount)}</p>
-          </div>
-          <div className="bg-card rounded-lg border p-5 border-xero-warning/30 bg-gradient-to-br from-xero-warning/5 to-transparent">
-            <p className="text-sm text-xero-warning flex items-center gap-1.5">
-              <BrainCircuit className="h-4 w-4" /> AI Flagged
-            </p>
-            <p className="text-2xl font-semibold mt-1">{flagged.length}</p>
-          </div>
+          <p className="text-xs text-muted-foreground mt-3">
+            {bills.length} items | {formatCurrency(totalAmount)} NZD
+          </p>
         </div>
-
-        {/* AI Flagged Bills Section */}
-        {flagged.length > 0 && (
-          <div className="mb-6 bg-card rounded-lg border">
-            <div className="px-5 py-4 border-b flex items-center gap-2">
-              <BrainCircuit className="h-5 w-5 text-xero-blue" />
-              <h2 className="font-semibold text-base">AI Anomaly Detection</h2>
-              <Badge className="bg-xero-warning/15 text-xero-warning border-xero-warning/30 ml-auto text-xs">
-                {flagged.length} flagged
-              </Badge>
-            </div>
-            <div className="p-4 grid gap-3">
-              {flagged.map((bill) => (
-                <div
-                  key={bill.id}
-                  onClick={() => navigate(`/bill/${bill.id}`)}
-                  className={`cursor-pointer rounded-lg border p-4 flex items-center gap-4 hover:bg-muted/50 transition-colors border-l-4 ${
-                    bill.riskLevel === "high"
-                      ? "border-l-destructive"
-                      : bill.riskLevel === "medium"
-                      ? "border-l-xero-warning"
-                      : "border-l-yellow-400"
-                  }`}
-                >
-                  <div className="flex-shrink-0">
-                    {bill.riskLevel === "high" ? (
-                      <ShieldAlert className="h-5 w-5 text-destructive animate-pulse-subtle" />
-                    ) : (
-                      <Sparkles className="h-5 w-5 text-xero-warning animate-pulse-subtle" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-medium text-xero-blue">{bill.billNumber}</span>
-                      <span className="text-sm text-foreground">{bill.supplier}</span>
-                      <Badge className={`border-0 text-xs ${
-                        bill.riskLevel === "high" ? "bg-red-100 text-red-700" : bill.riskLevel === "medium" ? "bg-amber-100 text-amber-700" : "bg-yellow-50 text-yellow-700"
-                      }`}>
-                        {bill.riskLevel} risk
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate">{bill.aiReason}</p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="font-semibold">{formatCurrency(bill.total)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Tabs + Table */}
         <div className="bg-card rounded-lg border">
