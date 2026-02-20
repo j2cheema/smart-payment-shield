@@ -1,51 +1,56 @@
 
 
-# Xero AI Bills Prototype — Anomalous First Bill Detection
+# Upgrade AI Flagged Bills Display
 
-An interactive prototype that mimics Xero's bill management UI and showcases an AI-powered feature: flagging unusually high first-time supplier invoices for additional approval.
+## What Changes
+
+### 1. AI Flagged Section on Dashboard
+Instead of mixing flagged bills into the main table with just a small badge, add a dedicated **"AI Flagged Bills"** section above the main bills table. This section will:
+- Have a distinct header with an AI-themed icon (sparkles/brain) and title like "AI Anomaly Detection"
+- Show flagged bills as prominent cards with risk level indicators, supplier name, amount, and the AI reason
+- Each card is clickable and navigates to the bill detail
+- Cards have a colored left border based on risk level (red for high, amber for medium, yellow for low)
+
+### 2. Upgraded AI Icons
+Replace the generic `AlertTriangle` warning icon with more AI-themed icons from Lucide:
+- **`BrainCircuit`** for the main AI detection feature branding
+- **`Sparkles`** for the AI flagged badge on individual bills
+- **`ShieldAlert`** for high-risk indicators
+- **`ScanSearch`** for the detection concept
+
+These will be used across:
+- The summary card (replacing AlertTriangle)
+- The flagged section header
+- Individual flagged bill badges in the table
+- The Bill Detail page alert banner
+- The AI Insights page
+
+### 3. Visual Polish
+- The AI Flagged summary card gets a subtle gradient or glow effect to stand out
+- Flagged bill badges in the table use `Sparkles` icon with a slight animated pulse
+- The dedicated flagged section uses a subtle background tint to differentiate it
 
 ---
 
-## Pages & Navigation
+## Technical Details
 
-### 1. Bills Dashboard (Home)
-- Mimics Xero's bills list view from your first screenshot
-- Top navigation bar styled like Xero (dark navy, "Business > Bills" breadcrumb)
-- Tab bar: **Draft | Awaiting Approval | Awaiting Payment | Overdue | Paid**
-- Table of bills showing: Due Date, Bill #, From (supplier), Amount, Status
-- Bills flagged by AI get a visual indicator — an orange/amber "⚠ AI Flagged" badge
-- Summary stats at the top (total bills, total amount, flagged count)
+### Files Modified
 
-### 2. Bill Detail View
-- Clicking a bill opens a detailed view matching your second screenshot
-- Shows full bill info: supplier, date, due date, line items, amounts, tax
-- For **AI-flagged bills**, a prominent alert banner appears at the top explaining:
-  - "This is the first bill from this supplier and the amount is significantly higher than your typical bills"
-  - Shows comparison: "Your average bill: $X | This bill: $Y (Z% higher)"
-  - Two action buttons: **Approve Anyway** and **Request Review**
+**`src/pages/Index.tsx`**
+- Import `BrainCircuit`, `Sparkles`, `ShieldAlert` from lucide-react
+- Add a new "AI Flagged Bills" card section between the summary cards and the tabs/table
+- This section only renders when there are flagged bills
+- Each flagged bill renders as a horizontal card showing: risk badge, supplier, bill number, amount, and AI reason snippet
+- Replace `AlertTriangle` with `Sparkles` in the table badge
+- Add a subtle pulse animation class to the AI badge
 
-### 3. AI Insights Panel
-- A dedicated section/page showing the AI detection logic in action
-- Lists all new suppliers with their first bill amounts vs. the account's average
-- Visual risk indicator (low / medium / high) for each flagged bill
-- Provides a clear explanation of why each bill was flagged
+**`src/pages/BillDetail.tsx`**
+- Replace `AlertTriangle` with `BrainCircuit` in the AI alert banner
+- Update the alert title icon to feel more AI-branded
 
----
+**`src/pages/AIInsights.tsx`**
+- Already uses `ShieldAlert` -- will also add `BrainCircuit` and `Sparkles` where appropriate
 
-## Mock Data
-- ~15 pre-built bills from various suppliers with realistic amounts
-- 2-3 bills from brand-new suppliers with unusually high amounts (flagged by AI)
-- Historical average bill amount calculated from the rest of the data
-- Supplier profiles with bill history counts
-
-## Interactions
-- Click through bills list → bill detail
-- Approve or request review on flagged bills (updates status in-app)
-- Filter/tab between bill statuses
-- Flagged bills visually stand out in the list
-
-## Design
-- Xero's color palette: dark navy header (#1B2A4A), white content area, blue accent (#0078C8)
-- Clean, professional typography matching Xero's style
-- Subtle AI indicators that feel native to the Xero experience, not bolted on
+**`src/index.css`**
+- Add a `pulse-subtle` keyframe animation for the AI badge glow effect
 
