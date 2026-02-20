@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AlertTriangle, TrendingUp, ShieldAlert, Info } from "lucide-react";
+import { BrainCircuit, TrendingUp, ShieldAlert, Sparkles, Info } from "lucide-react";
 import XeroHeader from "@/components/XeroHeader";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +33,7 @@ const AIInsights = () => {
       <main className="max-w-5xl mx-auto px-6 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <ShieldAlert className="h-6 w-6 text-xero-blue" /> AI Anomaly Detection
+            <BrainCircuit className="h-6 w-6 text-xero-blue" /> AI Anomaly Detection
           </h1>
           <p className="text-muted-foreground mt-1">
             Automatically flags first-time supplier bills with unusually high amounts
@@ -62,7 +62,7 @@ const AIInsights = () => {
           </Card>
           <Card className="border-xero-warning/30">
             <CardContent className="pt-5">
-              <p className="text-sm text-xero-warning flex items-center gap-1"><AlertTriangle className="h-3.5 w-3.5" /> Flagged</p>
+              <p className="text-sm text-xero-warning flex items-center gap-1"><Sparkles className="h-3.5 w-3.5" /> Flagged</p>
               <p className="text-2xl font-bold mt-1">{flagged.length}</p>
             </CardContent>
           </Card>

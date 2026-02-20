@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, AlertTriangle, CheckCircle2, Send } from "lucide-react";
+import { ArrowLeft, BrainCircuit, CheckCircle2, Send } from "lucide-react";
 import XeroHeader from "@/components/XeroHeader";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -54,7 +54,7 @@ const BillDetail = () => {
         {/* AI Alert */}
         {bill.aiFlagged && !actionTaken && (
           <Alert className="mb-6 border-xero-warning/40 bg-xero-warning/5">
-            <AlertTriangle className="h-5 w-5 text-xero-warning" />
+            <BrainCircuit className="h-5 w-5 text-xero-warning" />
             <AlertTitle className="text-base font-semibold flex items-center gap-2">
               AI Anomaly Detected
               <Badge className={`text-xs border-0 ${bill.riskLevel === "high" ? "bg-red-100 text-red-700" : bill.riskLevel === "medium" ? "bg-amber-100 text-amber-700" : "bg-yellow-50 text-yellow-700"}`}>

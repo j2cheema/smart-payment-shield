@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle } from "lucide-react";
+import { BrainCircuit, Sparkles, ShieldAlert } from "lucide-react";
 import XeroHeader from "@/components/XeroHeader";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -53,13 +53,64 @@ const Index = () => {
             <p className="text-sm text-muted-foreground">Total Amount</p>
             <p className="text-2xl font-semibold mt-1">{formatCurrency(totalAmount)}</p>
           </div>
-          <div className="bg-card rounded-lg border p-5 border-xero-warning/30">
+          <div className="bg-card rounded-lg border p-5 border-xero-warning/30 bg-gradient-to-br from-xero-warning/5 to-transparent">
             <p className="text-sm text-xero-warning flex items-center gap-1.5">
-              <AlertTriangle className="h-4 w-4" /> AI Flagged
+              <BrainCircuit className="h-4 w-4" /> AI Flagged
             </p>
             <p className="text-2xl font-semibold mt-1">{flagged.length}</p>
           </div>
         </div>
+
+        {/* AI Flagged Bills Section */}
+        {flagged.length > 0 && (
+          <div className="mb-6 bg-card rounded-lg border">
+            <div className="px-5 py-4 border-b flex items-center gap-2">
+              <BrainCircuit className="h-5 w-5 text-xero-blue" />
+              <h2 className="font-semibold text-base">AI Anomaly Detection</h2>
+              <Badge className="bg-xero-warning/15 text-xero-warning border-xero-warning/30 ml-auto text-xs">
+                {flagged.length} flagged
+              </Badge>
+            </div>
+            <div className="p-4 grid gap-3">
+              {flagged.map((bill) => (
+                <div
+                  key={bill.id}
+                  onClick={() => navigate(`/bill/${bill.id}`)}
+                  className={`cursor-pointer rounded-lg border p-4 flex items-center gap-4 hover:bg-muted/50 transition-colors border-l-4 ${
+                    bill.riskLevel === "high"
+                      ? "border-l-destructive"
+                      : bill.riskLevel === "medium"
+                      ? "border-l-xero-warning"
+                      : "border-l-yellow-400"
+                  }`}
+                >
+                  <div className="flex-shrink-0">
+                    {bill.riskLevel === "high" ? (
+                      <ShieldAlert className="h-5 w-5 text-destructive animate-pulse-subtle" />
+                    ) : (
+                      <Sparkles className="h-5 w-5 text-xero-warning animate-pulse-subtle" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-medium text-xero-blue">{bill.billNumber}</span>
+                      <span className="text-sm text-foreground">{bill.supplier}</span>
+                      <Badge className={`border-0 text-xs ${
+                        bill.riskLevel === "high" ? "bg-red-100 text-red-700" : bill.riskLevel === "medium" ? "bg-amber-100 text-amber-700" : "bg-yellow-50 text-yellow-700"
+                      }`}>
+                        {bill.riskLevel} risk
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">{bill.aiReason}</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="font-semibold">{formatCurrency(bill.total)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Tabs + Table */}
         <div className="bg-card rounded-lg border">
@@ -107,8 +158,8 @@ const Index = () => {
                       <TableCell>{statusBadge(bill.status)}</TableCell>
                       <TableCell>
                         {bill.aiFlagged && (
-                          <Badge className="bg-xero-warning/15 text-xero-warning border-xero-warning/30 gap-1">
-                            <AlertTriangle className="h-3 w-3" /> AI Flagged
+                          <Badge className="bg-xero-warning/15 text-xero-warning border-xero-warning/30 gap-1 animate-pulse-subtle">
+                            <Sparkles className="h-3 w-3" /> AI Flagged
                           </Badge>
                         )}
                       </TableCell>
