@@ -102,6 +102,29 @@ export const mockBills: Bill[] = [
     "15", "BILL-015", "GreenLeaf Office Plants", 0, "2026-02-19", "2026-03-19", 890.00, "awaiting_approval",
     [li("Indoor plant hire - quarterly", 1, 690.00, "Office Supplies"), li("Plant maintenance", 1, 200.00, "Facilities")]
   ),
+
+  // More AI-flagged bills
+  bill(
+    "16", "BILL-016", "Pinnacle Legal Partners", 0, "2026-02-19", "2026-03-19", 12400.00, "awaiting_approval",
+    [li("Contract review & negotiation", 1, 8400.00, "Professional Services"), li("IP advisory retainer", 1, 4000.00, "Professional Services")],
+    true,
+    "First bill from this supplier. Amount is 1,627% higher than your average bill ($718). No prior transaction history to verify.",
+    "high"
+  ),
+  bill(
+    "17", "BILL-017", "Orion Data Systems", 0, "2026-02-20", "2026-03-20", 9750.00, "awaiting_approval",
+    [li("Server migration project", 1, 7250.00, "IT & Software"), li("Cloud setup & config", 1, 2500.00, "IT & Software")],
+    true,
+    "First bill from this supplier. Amount is 1,258% higher than your average bill ($718). No prior transaction history to verify.",
+    "high"
+  ),
+  bill(
+    "18", "BILL-018", "Velvet Events Co", 0, "2026-02-20", "2026-03-20", 5600.00, "draft",
+    [li("Annual company event planning", 1, 4000.00, "Marketing & Events"), li("Venue deposit", 1, 1600.00, "Marketing & Events")],
+    true,
+    "First bill from this supplier. Amount is 680% higher than your average bill ($718). No prior transaction history to verify.",
+    "high"
+  ),
 ];
 
 export const getAverageBillAmount = (): number => {
