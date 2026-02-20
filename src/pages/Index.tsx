@@ -8,7 +8,7 @@ import { Table, TableHeader, TableHead, TableRow, TableCell, TableBody } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { mockBills, getBillsByStatus, type BillStatus } from "@/data/bills";
+import { mockBills, getBillsByStatus, getFlaggedBills, type BillStatus } from "@/data/bills";
 
 const statusTabs: { value: BillStatus | "all"; label: string }[] = [
   { value: "all", label: "All" },
@@ -36,10 +36,18 @@ const formatCurrency = (n: number) =>
 
 const Index = () => {
   const [tab, setTab] = useState<string>("all");
+  const [showFlaggedOnly, setShowFlaggedOnly] = useState(false);
   const navigate = useNavigate();
 
-  const bills = tab === "all" ? mockBills : getBillsByStatus(tab as BillStatus);
-  const totalAmount = bills.reduce((s, b) => s + b.total, 0);
+  const flaggedCount = getFlaggedBills().length;
+  const baseBills = tab === "all" ? mockBills : getBillsByStatus(tab as BillStatus);
+  const bills = showFlaggedOnly ? baseBills.filter((b) => b.aiFlagged) : baseBills;
+  const totalAmount = baseBills.reduce((s, b) => s + b.total, 0);
+
+  const handleTabChange = (value: string) => {
+    setTab(value);
+    setShowFlaggedOnly(false);
+  };
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -87,13 +95,32 @@ const Index = () => {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-3">
-            {bills.length} items | {formatCurrency(totalAmount)} NZD
+            {baseBills.length} items | {formatCurrency(totalAmount)} NZD
+            {flaggedCount > 0 && (
+              <>
+                {" | "}
+                <span
+                  onClick={() => setShowFlaggedOnly((v) => !v)}
+                  className={`inline-flex items-center gap-1 cursor-pointer hover:underline ${
+                    showFlaggedOnly ? "text-xero-warning font-semibold" : "text-xero-warning"
+                  }`}
+                >
+                  <Sparkles className="h-3 w-3" />
+                  {flaggedCount} AI flagged
+                </span>
+              </>
+            )}
+            {showFlaggedOnly && (
+              <span className="ml-2 text-muted-foreground">
+                (showing {bills.length} flagged)
+              </span>
+            )}
           </p>
         </div>
 
         {/* Tabs + Table */}
         <div className="bg-card rounded-lg border">
-          <Tabs value={tab} onValueChange={setTab}>
+          <Tabs value={tab} onValueChange={handleTabChange}>
             <div className="border-b px-4 pt-3">
               <TabsList className="bg-transparent gap-0 h-auto p-0">
                 {statusTabs.map((t) => {

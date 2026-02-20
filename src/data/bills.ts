@@ -100,10 +100,7 @@ export const mockBills: Bill[] = [
   ),
   bill(
     "15", "BILL-015", "GreenLeaf Office Plants", 0, "2026-02-19", "2026-03-19", 890.00, "awaiting_approval",
-    [li("Indoor plant hire - quarterly", 1, 690.00, "Office Supplies"), li("Plant maintenance", 1, 200.00, "Facilities")],
-    true,
-    "First bill from this supplier. Amount is 24% higher than your average bill ($718). Low risk but flagged as first-time supplier.",
-    "low"
+    [li("Indoor plant hire - quarterly", 1, 690.00, "Office Supplies"), li("Plant maintenance", 1, 200.00, "Facilities")]
   ),
 ];
 
